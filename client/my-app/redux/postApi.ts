@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/base_url/base_url";
 import { ApiResponsePost, ICreatePostResposne, IDeletePostResposne, ILikedPost, ISearchResposne, IUpdatedPostResposne } from "@/type/type";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -5,7 +6,7 @@ export const postApi = createApi({
   reducerPath: "postApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/post",
+    baseUrl: `${BASE_URL}/api/post`,
     credentials: "include",
   }),
 

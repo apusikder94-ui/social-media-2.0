@@ -1,10 +1,11 @@
+import { BASE_URL } from "@/base_url/base_url";
 import { ApiResponseUser, IOtherUser, ISignIn, ISignUp, ISuggestedUser, IUser } from "@/type/type";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/auth",
+    baseUrl: `${BASE_URL}/api/auth`,
     credentials: "include",
   }),
 

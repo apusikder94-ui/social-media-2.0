@@ -1,0 +1,1 @@
+export const BASE_URL="https://social-media-app-full-stack-2.onrender.com"
