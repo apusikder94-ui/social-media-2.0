@@ -40,7 +40,7 @@ const EditProfile = ({ open, setOpen, users }: IDialog) => {
 
       // if user has existing image url
       if (users.profilePic) {
-        setImage(null); // file না, শুধু preview দেখাবে URL থেকে
+        setImage(null);
       }
     }
   }, [users, setValue]);
@@ -119,7 +119,7 @@ const EditProfile = ({ open, setOpen, users }: IDialog) => {
             <Textarea
               {...register("bio")}
               placeholder="Write bio..."
-              className="min-h-[90px]"
+              className="min-h-22.5"
             />
           </div>
 
