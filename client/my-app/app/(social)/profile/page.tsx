@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Tabs,
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
-import { Bookmark } from "lucide-react";
+import { Bookmark, LogOut, Pencil } from "lucide-react";
 
 import { useGetProfileQuery } from "@/redux/authApi";
 
@@ -28,6 +29,8 @@ const Page = () => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<any>(null);
 
+  const router = useRouter();
+
   // ================= API =================
   const { data, isLoading, isError, refetch } =
     useGetProfileQuery();
@@ -38,6 +41,23 @@ const Page = () => {
   const handleEdit = (user: any) => {
     setUsers(user);
     setOpen(true);
+  };
+
+  // ================= LOGOUT =================
+  const handleLogout = () => {
+    try {
+      // clear auth data
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      // optional refetch
+      refetch();
+
+      // redirect to login
+      router.push("/login");
+    } catch (error) {
+      console.log("Logout error:", error);
+    }
   };
 
   // ================= LOADING =================
@@ -92,13 +112,27 @@ const Page = () => {
 
           </div>
 
-          {/* EDIT BUTTON */}
-          <Button
-            onClick={() => handleEdit(user)}
-            className="rounded-full"
-          >
-            Edit
-          </Button>
+          {/* ACTION BUTTONS */}
+          <div className="flex items-center gap-3">
+
+            <Button
+              onClick={() => handleEdit(user)}
+              className="rounded-full flex items-center gap-2"
+            >
+              <Pencil size={16} />
+              Edit
+            </Button>
+
+            <Button
+              onClick={handleLogout}
+              variant="destructive"
+              className="rounded-full flex items-center gap-2"
+            >
+              <LogOut size={16} />
+              Logout
+            </Button>
+
+          </div>
 
         </div>
 
@@ -138,7 +172,7 @@ const Page = () => {
           <TabsTrigger value="saved">Saved</TabsTrigger>
         </TabsList>
 
-        {/* ================= POSTS ================= */}
+        {/* POSTS */}
         <TabsContent value="posts">
           <div className="space-y-4 mt-4">
 
@@ -159,7 +193,7 @@ const Page = () => {
           </div>
         </TabsContent>
 
-        {/* ================= SAVED ================= */}
+        {/* SAVED */}
         <TabsContent value="saved">
           <div className="space-y-4 mt-4">
 
