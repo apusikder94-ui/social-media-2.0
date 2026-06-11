@@ -6,6 +6,7 @@ import { AuthRequest } from "../middleware/authMiddleware";
 import { Post } from "../models/postModels";
 import { uploadImagesCloudinary } from "../utils/cloudinary";
 import { populate } from "dotenv";
+import { clear } from "console";
 
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
@@ -322,7 +323,7 @@ export const bookmark = async (req: AuthRequest, res: Response) => {
       message: isBookmarking ? "removed" : "bookmarking",
       bookmarked: isBookmarking,
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 
 export const getSuggestedUsers = async (req: AuthRequest, res: Response) => {
@@ -361,6 +362,28 @@ export const getSuggestedUsers = async (req: AuthRequest, res: Response) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export const logout = (req: Request, res: Response) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
       message: "Server error",

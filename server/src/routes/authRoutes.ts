@@ -3,6 +3,7 @@ import {
   bookmark,
   followUnFollowing,
   getSuggestedUsers,
+  logout,
   otherProfile,
   profile,
   signIn,
@@ -15,6 +16,7 @@ export const authRoutes =  express.Router();
 
 authRoutes.post("/signUp", signUp);
 authRoutes.post("/signIn", signIn);
+authRoutes.post("/logout", logout);
 authRoutes.get("/profile", authMiddleware, profile);
 authRoutes.put("/profile",upload.single("profilePic"), authMiddleware, updatedProfile);
 authRoutes.post("/followUnFollow/:id", authMiddleware, followUnFollowing);

@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://social-media-2-0-sooty.vercel.app",
     credentials: true,
   })
 );
