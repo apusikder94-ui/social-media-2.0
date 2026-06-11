@@ -3,63 +3,76 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
-import { Bookmark, LogOut, Pencil } from "lucide-react";
 
-import { useGetProfileQuery, useLogoutMutation } from "@/redux/authApi";
+import {
+  Bookmark,
+  LogOut,
+  Pencil,
+  Users,
+  UserPlus,
+} from "lucide-react";
+
+import {
+  useGetProfileQuery,
+  useLogoutMutation,
+} from "@/redux/authApi";
 
 import EditProfile from "@/components/EditProfile";
 import PostCard from "@/components/PostCard";
 
 const Page = () => {
-  // ================= STATE =================
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<any>(null);
-  const [logout] = useLogoutMutation();
 
   const router = useRouter();
 
-  // ================= API =================
-  const { data, isLoading, isError, refetch } = useGetProfileQuery();
+  const [logout] = useLogoutMutation();
+
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetProfileQuery();
 
   const user = data?.user;
 
-  // ================= EDIT PROFILE =================
   const handleEdit = (user: any) => {
     setUsers(user);
     setOpen(true);
   };
 
-  // ================= LOGOUT =================
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
-      // clear auth data
-      const res=await logout().unwrap();
-      console.log(res)
-      // optional refetch
-      refetch();
-
-      // redirect to login
+      await logout().unwrap();
       router.push("/signIn");
     } catch (error) {
       console.log("Logout error:", error);
     }
   };
 
-  // ================= LOADING =================
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center text-lg font-medium">
         Loading...
       </div>
     );
   }
 
-  // ================= ERROR =================
   if (isError) {
     return (
       <div className="h-screen flex items-center justify-center text-red-500">
@@ -69,107 +82,151 @@ const Page = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-5">
-      {/* ================= PROFILE CARD ================= */}
-      <div className="bg-white border rounded-2xl p-5 shadow-sm">
-        <div className="flex items-center justify-between">
-          {/* USER INFO */}
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
+    <div className="max-w-4xl mx-auto px-3 sm:px-5 py-5">
+      {/* Profile Card */}
+      <div className="bg-white border rounded-3xl shadow-sm p-5 sm:p-8">
+        <div className="flex flex-col lg:flex-row lg:justify-between gap-6">
+          {/* User Info */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+            <Avatar className="h-24 w-24 sm:h-28 sm:w-28 border">
               <AvatarImage src={user?.profilePic} />
-              <AvatarFallback>{user?.name?.slice(0, 1)}</AvatarFallback>
+              <AvatarFallback className="text-2xl">
+                {user?.name?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
 
-            <div>
-              <h1 className="font-semibold text-lg">{user?.name}</h1>
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl font-bold">
+                {user?.name}
+              </h1>
 
-              <p className="text-sm text-gray-500">{user?.email}</p>
+              <p className="text-gray-500 break-all">
+                {user?.email}
+              </p>
 
-              <p className="text-sm text-gray-600 mt-1">{user?.bio}</p>
+              <p className="text-sm text-gray-600 mt-3 max-w-lg">
+                {user?.bio || "No bio available"}
+              </p>
             </div>
           </div>
 
-          {/* ACTION BUTTONS */}
-          <div className="flex items-center gap-3">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
             <Button
               onClick={() => handleEdit(user)}
-              className="rounded-full flex items-center gap-2"
+              className="w-full sm:w-auto rounded-full"
             >
-              <Pencil size={16} />
-              Edit
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit Profile
             </Button>
 
             <Button
-              onClick={handleLogout}
               variant="destructive"
-              className="rounded-full flex items-center gap-2"
+              onClick={handleLogout}
+              className="w-full sm:w-auto rounded-full"
             >
-              <LogOut size={16} />
+              <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>
           </div>
         </div>
 
-        {/* ================= STATS ================= */}
-        <div className="flex justify-between mt-6 text-sm">
-          <div>
-            <span className="font-semibold">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mt-8 border-t pt-6">
+          <div className="text-center">
+            <h2 className="font-bold text-xl">
               {user?.followers?.length || 0}
-            </span>{" "}
-            Followers
+            </h2>
+
+            <div className="flex justify-center items-center gap-1 text-gray-500 text-sm">
+              <Users size={15} />
+              Followers
+            </div>
           </div>
 
-          <div>
-            <span className="font-semibold">
+          <div className="text-center">
+            <h2 className="font-bold text-xl">
               {user?.following?.length || 0}
-            </span>{" "}
-            Following
+            </h2>
+
+            <div className="flex justify-center items-center gap-1 text-gray-500 text-sm">
+              <UserPlus size={15} />
+              Following
+            </div>
           </div>
 
-          <div className="flex items-center gap-1">
-            <Bookmark size={14} />
+          <div className="text-center">
+            <h2 className="font-bold text-xl">
+              {user?.bookmark?.length || 0}
+            </h2>
 
-            <span className="font-semibold">{user?.bookmark?.length || 0}</span>
+            <div className="flex justify-center items-center gap-1 text-gray-500 text-sm">
+              <Bookmark size={15} />
+              Saved
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ================= TABS ================= */}
-      <Tabs defaultValue="posts">
-        <TabsList className="grid grid-cols-2 w-full">
-          <TabsTrigger value="posts">Posts</TabsTrigger>
-          <TabsTrigger value="saved">Saved</TabsTrigger>
-        </TabsList>
+      {/* Tabs */}
+      <div className="mt-8">
+        <Tabs defaultValue="posts">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="posts">
+              Posts
+            </TabsTrigger>
 
-        {/* POSTS */}
-        <TabsContent value="posts">
-          <div className="space-y-4 mt-4">
-            {user?.post?.length ? (
-              user.post.map((post: any) => (
-                <PostCard key={post._id} post={post} refetch={refetch} />
-              ))
-            ) : (
-              <p className="text-center text-gray-500">No Posts Yet 🚀</p>
-            )}
-          </div>
-        </TabsContent>
+            <TabsTrigger value="saved">
+              Saved
+            </TabsTrigger>
+          </TabsList>
 
-        {/* SAVED */}
-        <TabsContent value="saved">
-          <div className="space-y-4 mt-4">
-            {user?.bookmark?.length ? (
-              user.bookmark.map((post: any) => (
-                <PostCard key={post._id} post={post} refetch={refetch} />
-              ))
-            ) : (
-              <p className="text-center text-gray-500">No Saved Posts 📌</p>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+          {/* Posts */}
+          <TabsContent value="posts">
+            <div className="mt-5 space-y-5">
+              {user?.post?.length > 0 ? (
+                user.post.map((post: any) => (
+                  <PostCard
+                    key={post._id}
+                    post={post}
+                    refetch={refetch}
+                  />
+                ))
+              ) : (
+                <div className="border rounded-xl p-8 text-center text-gray-500">
+                  No Posts Yet 🚀
+                </div>
+              )}
+            </div>
+          </TabsContent>
 
-      {/* ================= EDIT MODAL ================= */}
-      <EditProfile open={open} setOpen={setOpen} users={users} />
+          {/* Saved Posts */}
+          <TabsContent value="saved">
+            <div className="mt-5 space-y-5">
+              {user?.bookmark?.length > 0 ? (
+                user.bookmark.map((post: any) => (
+                  <PostCard
+                    key={post._id}
+                    post={post}
+                    refetch={refetch}
+                  />
+                ))
+              ) : (
+                <div className="border rounded-xl p-8 text-center text-gray-500">
+                  No Saved Posts 📌
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Edit Modal */}
+      <EditProfile
+        open={open}
+        setOpen={setOpen}
+        users={users}
+      />
     </div>
   );
 };

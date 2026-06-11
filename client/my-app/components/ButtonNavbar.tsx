@@ -67,7 +67,7 @@ const ButtonNavbar = () => {
 
           {/* Reels */}
           <button
-            onClick={() => router.push("/reels")}
+            // onClick={() => router.push("/reels")}
             className={`flex flex-col items-center transition ${
               isActive("/reels")
                 ? "text-black"
