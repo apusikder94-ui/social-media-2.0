@@ -373,8 +373,8 @@ export const logout = (req: Request, res: Response) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
     });
 
     return res.status(201).json({
