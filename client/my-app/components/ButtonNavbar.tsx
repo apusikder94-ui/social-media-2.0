@@ -29,7 +29,7 @@ const ButtonNavbar = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 w-full border-t bg-white/80 backdrop-blur-md shadow-lg z-50">
+      <div className="fixed bottom-0 left-0 w-full border-t bg-white/80 backdrop-blur-md shadow-lg z-50 md:hidden">
         <div className="max-w-md mx-auto flex items-center justify-between px-6 py-3">
           {/* Home */}
           <button
