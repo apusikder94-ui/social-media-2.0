@@ -3,23 +3,14 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import { Bookmark, LogOut, Pencil } from "lucide-react";
 
-import { useGetProfileQuery } from "@/redux/authApi";
+import { useGetProfileQuery, useLogoutMutation } from "@/redux/authApi";
 
 import EditProfile from "@/components/EditProfile";
 import PostCard from "@/components/PostCard";
@@ -28,12 +19,12 @@ const Page = () => {
   // ================= STATE =================
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<any>(null);
+  const [logout] = useLogoutMutation();
 
   const router = useRouter();
 
   // ================= API =================
-  const { data, isLoading, isError, refetch } =
-    useGetProfileQuery();
+  const { data, isLoading, isError, refetch } = useGetProfileQuery();
 
   const user = data?.user;
 
@@ -44,17 +35,16 @@ const Page = () => {
   };
 
   // ================= LOGOUT =================
-  const handleLogout = () => {
+  const handleLogout = async() => {
     try {
       // clear auth data
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
+      const res=await logout().unwrap();
+      console.log(res)
       // optional refetch
       refetch();
 
       // redirect to login
-      router.push("/login");
+      router.push("/signIn");
     } catch (error) {
       console.log("Logout error:", error);
     }
@@ -80,41 +70,27 @@ const Page = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-5">
-
       {/* ================= PROFILE CARD ================= */}
       <div className="bg-white border rounded-2xl p-5 shadow-sm">
-
         <div className="flex items-center justify-between">
-
           {/* USER INFO */}
           <div className="flex items-center gap-4">
-
             <Avatar className="h-16 w-16">
               <AvatarImage src={user?.profilePic} />
-              <AvatarFallback>
-                {user?.name?.slice(0, 1)}
-              </AvatarFallback>
+              <AvatarFallback>{user?.name?.slice(0, 1)}</AvatarFallback>
             </Avatar>
 
             <div>
-              <h1 className="font-semibold text-lg">
-                {user?.name}
-              </h1>
+              <h1 className="font-semibold text-lg">{user?.name}</h1>
 
-              <p className="text-sm text-gray-500">
-                {user?.email}
-              </p>
+              <p className="text-sm text-gray-500">{user?.email}</p>
 
-              <p className="text-sm text-gray-600 mt-1">
-                {user?.bio}
-              </p>
+              <p className="text-sm text-gray-600 mt-1">{user?.bio}</p>
             </div>
-
           </div>
 
           {/* ACTION BUTTONS */}
           <div className="flex items-center gap-3">
-
             <Button
               onClick={() => handleEdit(user)}
               className="rounded-full flex items-center gap-2"
@@ -131,14 +107,11 @@ const Page = () => {
               <LogOut size={16} />
               Logout
             </Button>
-
           </div>
-
         </div>
 
         {/* ================= STATS ================= */}
         <div className="flex justify-between mt-6 text-sm">
-
           <div>
             <span className="font-semibold">
               {user?.followers?.length || 0}
@@ -156,17 +129,13 @@ const Page = () => {
           <div className="flex items-center gap-1">
             <Bookmark size={14} />
 
-            <span className="font-semibold">
-              {user?.bookmark?.length || 0}
-            </span>
+            <span className="font-semibold">{user?.bookmark?.length || 0}</span>
           </div>
-
         </div>
       </div>
 
       {/* ================= TABS ================= */}
       <Tabs defaultValue="posts">
-
         <TabsList className="grid grid-cols-2 w-full">
           <TabsTrigger value="posts">Posts</TabsTrigger>
           <TabsTrigger value="saved">Saved</TabsTrigger>
@@ -175,54 +144,32 @@ const Page = () => {
         {/* POSTS */}
         <TabsContent value="posts">
           <div className="space-y-4 mt-4">
-
             {user?.post?.length ? (
               user.post.map((post: any) => (
-                <PostCard
-                  key={post._id}
-                  post={post}
-                  refetch={refetch}
-                />
+                <PostCard key={post._id} post={post} refetch={refetch} />
               ))
             ) : (
-              <p className="text-center text-gray-500">
-                No Posts Yet 🚀
-              </p>
+              <p className="text-center text-gray-500">No Posts Yet 🚀</p>
             )}
-
           </div>
         </TabsContent>
 
         {/* SAVED */}
         <TabsContent value="saved">
           <div className="space-y-4 mt-4">
-
             {user?.bookmark?.length ? (
               user.bookmark.map((post: any) => (
-                <PostCard
-                  key={post._id}
-                  post={post}
-                  refetch={refetch}
-                />
+                <PostCard key={post._id} post={post} refetch={refetch} />
               ))
             ) : (
-              <p className="text-center text-gray-500">
-                No Saved Posts 📌
-              </p>
+              <p className="text-center text-gray-500">No Saved Posts 📌</p>
             )}
-
           </div>
         </TabsContent>
-
       </Tabs>
 
       {/* ================= EDIT MODAL ================= */}
-      <EditProfile
-        open={open}
-        setOpen={setOpen}
-        users={users}
-      />
-
+      <EditProfile open={open} setOpen={setOpen} users={users} />
     </div>
   );
 };

@@ -1,5 +1,12 @@
 import { BASE_URL } from "@/base_url/base_url";
-import { ApiResponseUser, IOtherUser, ISignIn, ISignUp, ISuggestedUser, IUser } from "@/type/type";
+import {
+  ApiResponseUser,
+  IOtherUser,
+  ISignIn,
+  ISignUp,
+  ISuggestedUser,
+  IUser,
+} from "@/type/type";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
@@ -12,7 +19,6 @@ export const authApi = createApi({
   tagTypes: ["User"], // 🔥 ADD THIS
 
   endpoints: (builder) => ({
-
     // ================= SIGN UP =================
     signUp: builder.mutation<
       ISignUp,
@@ -26,10 +32,7 @@ export const authApi = createApi({
     }),
 
     // ================= SIGN IN =================
-    signIn: builder.mutation<
-      ISignIn,
-      { email: string; password: string }
-    >({
+    signIn: builder.mutation<ISignIn, { email: string; password: string }>({
       query: (data) => ({
         url: "/signIn",
         method: "POST",
@@ -94,10 +97,17 @@ export const authApi = createApi({
 
     // ================= OTHER USER PROFILE =================
     otherProfile: builder.query<IOtherUser, string>({
-      query: ( id ) => ({
+      query: (id) => ({
         url: `/otherUser/${id}`,
         method: "GET",
       }),
+    }),
+    logout: builder.mutation<any, void>({
+      query: () => ({
+        url: "/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ["User"], // 🔥 AUTO REFRESH
     }),
   }),
 });
@@ -111,4 +121,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useOtherProfileQuery,
+  useLogoutMutation,
 } = authApi;
