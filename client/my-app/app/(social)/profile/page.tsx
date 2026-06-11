@@ -11,16 +11,16 @@ import { Button } from "@/components/ui/button";
 
 import { Bookmark, LogOut, Pencil } from "lucide-react";
 
-import { useGetProfileQuery, useLogoutMutation } from "@/redux/authApi";
+import { authApi, useGetProfileQuery, useLogoutMutation } from "@/redux/authApi";
 
 import EditProfile from "@/components/EditProfile";
 import PostCard from "@/components/PostCard";
 import { toast } from "sonner";
-
+import { useDispatch } from "react-redux";
 const Page = () => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<any>(null);
-
+  const dispatch = useDispatch();
   const router = useRouter();
   const [logout] = useLogoutMutation();
 
@@ -39,17 +39,14 @@ const Page = () => {
     try {
       await logout().unwrap();
 
-      toast.success("Logging out...");
+      // 🔥 IMPORTANT FIX
+      dispatch(authApi.util.resetApiState());
 
-      setTimeout(() => {
-        router.push("/signIn");
-      }, 2000);
+      router.push("/signIn");
     } catch (error) {
-      console.log("Logout error:", error);
-      toast.error("Logout failed");
+      console.log(error);
     }
   };
-
   // LOADING
   if (isLoading) {
     return (
