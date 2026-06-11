@@ -80,7 +80,7 @@ const ButtonNavbar = () => {
 
           {/* Profile */}
           <button
-            onClick={() => router.push(`/profile/${user?._id}`)}
+            onClick={() => router.push(`/profile`)}
             className="flex flex-col items-center"
           >
             <Avatar className="h-8 w-8 border-2 border-gray-200">
