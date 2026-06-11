@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -46,15 +45,15 @@ const Feeds = () => {
   return (
     <div className="w-full">
       {/* Tabs */}
-      <Tabs defaultValue="foryou">
+      <Tabs defaultValue="foryou" className="pt-4 md:pt-0">
 
         {/* Tab Buttons */}
         <TabsList className="grid grid-cols-2 w-full h-14 mb-6">
-          <TabsTrigger value="foryou">
+          <TabsTrigger value="foryou" className="text-lg md:text-sm">
             For You
           </TabsTrigger>
 
-          <TabsTrigger value="following">
+          <TabsTrigger value="following" className="text-lg md:text-sm">
             Following
           </TabsTrigger>
         </TabsList>
@@ -66,7 +65,7 @@ const Feeds = () => {
             posts.map((post) => (
               <div
                 key={post._id}
-                className="border rounded-2xl p-4"
+                className="rounded-xl p-4"
               >
                 {/* Post Card */}
                 <PostCard post={post} refetch={refetch}/>
@@ -87,7 +86,7 @@ const Feeds = () => {
             followingPosts.map((post) => (
               <div
                 key={post._id}
-                className="border rounded-2xl p-4"
+                className="rounded-xl p-4"
               >
                 {/* Post Card */}
                 <PostCard post={post} refetch={refetch}/>

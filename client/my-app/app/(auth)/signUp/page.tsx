@@ -20,6 +20,7 @@ type FormData = {
 
 const Page = () => {
   const [signUp] = useSignUpMutation();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -31,6 +32,7 @@ const Page = () => {
     await signUp(data).unwrap();
     toast.success("Account create successfully 🎉");
     reset();
+    router.push("/signIn");
   };
 
   return (
@@ -117,7 +119,7 @@ const Page = () => {
 
             <p className="text-sm text-gray-700 text-center">
               already have an account?{" "}
-              <Link href="/auth/signIn" className="text-blue-700">
+              <Link href="/signIn" className="text-blue-700">
                 signIn
               </Link>
             </p>

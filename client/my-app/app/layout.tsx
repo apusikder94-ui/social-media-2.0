@@ -3,11 +3,12 @@ import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "./provider";
 import { Toaster } from "sonner";
+import AuthGuard from "@/components/AuthGuard";
 
-const poppins=Poppins({
-  subsets:["latin"],
-  weight:["400","500","600","700"]
-})
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,12 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${poppins.className} h-full antialiased`}
-    >
+    <html lang="en" className={`${poppins.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-gray-100">
-        <Providers>{children}</Providers>
+        <Providers>
+          <AuthGuard>{children}</AuthGuard>
+        </Providers>
         <Toaster position="top-right" richColors />
       </body>
     </html>

@@ -11,11 +11,11 @@ import Link from "next/link";
 const Sidebar = () => {
   const [open, setOpen] = useState<boolean>(false);
    const menu = [
-    { id: 1, name: "Home", path: "/social", icon: <Home size={20} /> },
-    { id: 2, name: "Search", path: "/social/search", icon: <Search size={20} /> },
-    { id: 3, name: "Notification", path: "/social/notifications", icon: <Bell size={20} /> },
-    { id: 4, name: "Reel", path: "/social/reels", icon: <Clapperboard size={20} /> },
-    { id: 5, name: "Profile", path: "/social/profile", icon: <User size={20} /> },
+    { id: 1, name: "Home", path: "/", icon: <Home size={20} /> },
+    { id: 2, name: "Search", path: "/search", icon: <Search size={20} /> },
+    { id: 3, name: "Notification", path: "/notifications", icon: <Bell size={20} /> },
+    { id: 4, name: "Reel", path: "/reels", icon: <Clapperboard size={20} /> },
+    { id: 5, name: "Profile", path: "/profile", icon: <User size={20} /> },
   ];
 
   return (

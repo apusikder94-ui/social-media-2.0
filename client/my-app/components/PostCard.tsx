@@ -147,7 +147,7 @@ const PostCard = ({ post, refetch }: Props) => {
     currentUser?.bookmark?.includes(post._id);
 
   return (
-    <div className="border rounded-2xl p-4 space-y-4 bg-white w-full">
+    <div className="rounded-2xl p-4 space-y-4 w-full border">
 
       {/* ================= HEADER ================= */}
       <div className="flex justify-between items-center">
@@ -155,7 +155,7 @@ const PostCard = ({ post, refetch }: Props) => {
         {/* USER */}
         <div className="flex items-center gap-3">
           <Link
-            href={`/social/profile/${post.author?._id}`}
+            href={`/profile/${post.author?._id}`}
           >
             <Avatar>
               <AvatarImage

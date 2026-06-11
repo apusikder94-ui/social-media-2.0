@@ -12,21 +12,29 @@ export default function AuthGuard({
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data, isLoading, isError } = useGetProfileQuery();
+  const { data, isLoading } = useGetProfileQuery();
+
+  const user = data?.user;
+
+  const publicRoutes = ["/signIn", "/signUp"];
 
   useEffect(() => {
-    if (!isLoading) {
-      // not logged in
-      if (!data?.user) {
-        router.push("/auth/signUp");
-      }
+    if (isLoading) return;
 
-      // logged in but trying to access auth pages
-      if (data?.user && pathname.startsWith("/auth")) {
-        router.push("/social");
-      }
+    const isPublicRoute = publicRoutes.includes(pathname);
+
+    // ❌ Not logged in → allow ONLY public routes
+    if (!user && !isPublicRoute) {
+      router.replace("/signIn");
+      return;
     }
-  }, [data, isLoading, router, pathname]);
+
+    // ❌ Logged in → block auth pages
+    if (user && isPublicRoute) {
+      router.replace("/");
+      return;
+    }
+  }, [user, isLoading, pathname, router]);
 
   if (isLoading) {
     return (

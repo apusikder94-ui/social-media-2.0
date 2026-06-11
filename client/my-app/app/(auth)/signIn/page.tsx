@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import img from "@/public/Hero.png";
 import Image from "next/image";
@@ -7,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { useSignInMutation, useSignUpMutation } from "@/redux/authApi";
+import { useSignInMutation } from "@/redux/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -17,8 +18,9 @@ type FormData = {
 };
 
 const Page = () => {
-  const [signIn] = useSignInMutation();
+  const [signIn, { isLoading }] = useSignInMutation();
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -28,35 +30,47 @@ const Page = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await signIn(data).unwrap(); // RTK Query call
-      toast.success("Account login successfully 🎉");
-      router.push("/social");
+      const res = await signIn(data).unwrap();
+
+      toast.success(res?.message || "Login successful 🎉");
+
       reset();
-    } catch (error) {
+
+      // small delay helps cookie sync
+      setTimeout(() => {
+        router.push("/");
+      }, 100);
+    } catch (error: any) {
       console.log(error);
+
+      toast.error(
+        error?.data?.message || "Login failed. Please try again."
+      );
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto w-full h-screen px-6 md:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 h-screen items-center gap-10">
-        {/* Left */}
+
+        {/* LEFT SIDE */}
         <div className="hidden md:block">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center relative">
             <div className="w-60 h-60 absolute bg-blue-600 blur-2xl opacity-30"></div>
             <Image
-              className="h-60 w-120 object-contain"
+              className="h-60 w-auto object-contain"
               src={img}
-              alt="signUp"
+              alt="signIn"
             />
           </div>
         </div>
 
-        {/* Right */}
+        {/* RIGHT SIDE */}
         <div className="flex flex-col items-center gap-6 w-full">
+
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-114 p-6 border rounded-2xl space-y-5"
+            className="w-full max-w-md p-6 border rounded-2xl space-y-5"
           >
             <h3 className="text-2xl font-semibold text-blue-600 text-center">
               Sign In
@@ -73,7 +87,9 @@ const Page = () => {
                 })}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -101,17 +117,22 @@ const Page = () => {
             </div>
 
             {/* BUTTON */}
-            <Button type="submit" className="w-full bg-blue-600">
-              Sign Up
+            <Button
+              type="submit"
+              className="w-full bg-blue-600"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing in..." : "Sign In"}
             </Button>
 
             <p className="text-sm text-gray-700 text-center">
-              don't have an account?{" "}
-              <Link href="/auth/signUp" className="text-blue-700">
-                signUp
+              don’t have an account?{" "}
+              <Link href="/signUp" className="text-blue-700">
+                Sign Up
               </Link>
             </p>
           </form>
+
         </div>
       </div>
     </div>
