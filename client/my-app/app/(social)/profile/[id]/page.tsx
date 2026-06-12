@@ -136,7 +136,7 @@ const Page = () => {
         <div className="flex justify-between mt-6 text-sm">
           <div>
             <span className="font-semibold">
-              {user?.followers?.length || 0}
+              {user?.follower?.length || 0}
             </span>{" "}
             Followers
           </div>
