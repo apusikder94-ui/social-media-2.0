@@ -263,20 +263,22 @@ export const followUnFollowing = async (req: AuthRequest, res: Response) => {
     );
 
     if (!isFollowing) {
-      user.following.push(otherUserId as any);
-      otherUser.follower.push(localUserId as any);
+      await User.findByIdAndUpdate(localUserId, {
+        $addToSet: { following: otherUserId },
+      });
+
+      await User.findByIdAndUpdate(otherUserId, {
+        $addToSet: { follower: localUserId },
+      });
     } else {
-      user.following = user.following.filter(
-        (id) => id.toString() !== otherUserId
-      );
+      await User.findByIdAndUpdate(localUserId, {
+        $pull: { following: otherUserId },
+      });
 
-      otherUser.follower = otherUser.follower.filter(
-        (id) => id.toString() !== localUserId
-      );
+      await User.findByIdAndUpdate(otherUserId, {
+        $pull: { follower: localUserId },
+      });
     }
-
-    await user.save();
-    await otherUser.save();
 
     return res.status(200).json({
       success: true,
