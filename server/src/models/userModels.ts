@@ -34,7 +34,7 @@ const userSchema = new Schema(
     profilePic: {
       type: String,
     },
-    follower: [
+    followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

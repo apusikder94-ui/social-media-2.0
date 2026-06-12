@@ -268,7 +268,7 @@ export const followUnFollowing = async (req: AuthRequest, res: Response) => {
       });
 
       await User.findByIdAndUpdate(otherUserId, {
-        $addToSet: { follower: localUserId },
+        $addToSet: { followers: localUserId },
       });
     } else {
       await User.findByIdAndUpdate(localUserId, {
@@ -276,7 +276,7 @@ export const followUnFollowing = async (req: AuthRequest, res: Response) => {
       });
 
       await User.findByIdAndUpdate(otherUserId, {
-        $pull: { follower: localUserId },
+        $pull: { followers: localUserId },
       });
     }
 
