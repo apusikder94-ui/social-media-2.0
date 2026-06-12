@@ -49,11 +49,11 @@ const Feeds = () => {
 
         {/* Tab Buttons */}
         <TabsList className="grid grid-cols-2 w-full h-14 mb-6">
-          <TabsTrigger value="foryou" className="text-lg md:text-sm">
+          <TabsTrigger value="foryou" className="text-sm md:text-sm">
             For You
           </TabsTrigger>
 
-          <TabsTrigger value="following" className="text-lg md:text-sm">
+          <TabsTrigger value="following" className="text-sm md:text-sm">
             Following
           </TabsTrigger>
         </TabsList>
